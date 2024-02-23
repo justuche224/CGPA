@@ -1,0 +1,58 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GPA Calculator</title>
+  </head>
+  <body>
+    <h1>GPA Calculator</h1>
+    <form id="gradeForm">
+      <label for="grades">Enter Grades:</label>
+      <input
+        type="text"
+        id="grades"
+        name="grades"
+        placeholder="Comma separated grades (e.g., A,B,C)"
+      />
+      <br />
+      <label for="unitLoads">Enter Unit Loads:</label>
+      <input
+        type="text"
+        id="unitLoads"
+        name="unitLoads"
+        placeholder="Comma separated unit loads (e.g., 3,4,2)"
+      />
+      <br />
+      <button type="submit">Calculate GPA</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+      document
+        .getElementById("gradeForm")
+        .addEventListener("submit", async function (event) {
+          event.preventDefault();
+
+          const gradesInput = document.getElementById("grades").value;
+          const unitLoadsInput = document.getElementById("unitLoads").value;
+
+          const grades = gradesInput.split(",");
+          const unitLoads = unitLoadsInput.split(",");
+
+          const response = await fetch("/calculateGPA", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ grades, unitLoads }),
+          });
+
+          const data = await response.json();
+          document.getElementById(
+            "result"
+          ).innerText = `GPA: ${data.gpa.toFixed(2)}`;
+        });
+    </script>
+  </body>
+</html>
